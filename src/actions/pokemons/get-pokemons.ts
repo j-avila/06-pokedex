@@ -1,4 +1,5 @@
-import {pokeApi, Pokemon} from '../../domain/entities/pokemon';
+import {pokeApi} from '../../config/api/pokeApi';
+import {Pokemon} from '../../domain/entities/pokemon';
 import type {
   PokeAPIPokemon,
   PokePagination,
@@ -8,7 +9,7 @@ import {PokemonMapper} from '../../infrastructure/mappers/pokemon.mapper';
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const getPokemons = async (
-  page: number = 1,
+  page: number = 0,
   limit: number = 20,
 ): Promise<Pokemon[]> => {
   try {
@@ -20,14 +21,13 @@ export const getPokemons = async (
     });
 
     const pokeApiPokemons = await Promise.all(pokemonPromises);
-    const pokemons = await Promise.all(
+    const pokemonsPromises = await Promise.all(
       pokeApiPokemons.map(async item =>
         PokemonMapper.pokeApiPokemonToEntity(item.data),
       ),
     );
 
-    console.log('🚀', pokemons[0]);
-    return pokemons;
+    return await Promise.all(pokemonsPromises);
   } catch (error) {
     console.error('get pokemons: ', error);
     return [];

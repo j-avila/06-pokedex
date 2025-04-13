@@ -78,20 +78,47 @@ export const ThemeContent = createContext({
   theme: {...LightTheme, fonts: customFonts},
 });
 
+const customColors = {
+  primary: 'blue',
+  background: 'white',
+  card: 'white',
+  text: 'grey',
+  border: 'grey',
+  notification: 'red',
+};
+
+const customDarkColors = {
+  primary: 'blue',
+  background: 'black',
+  card: 'black',
+  text: 'white',
+  border: 'grey',
+  notification: 'red',
+};
+
 const ThemeContextProvider = ({children}: PropsWithChildren) => {
   const colorScheme = useColorScheme();
   const [isDark, setIsDarkMode] = useState(colorScheme === 'dark');
 
-  const initalTheme = isDark
-    ? {...DarkTheme, fonts: customFonts}
-    : {...LightTheme, fonts: customFonts};
+  const initalTheme = {
+    ...LightTheme,
+    text: customColors.text,
+    fonts: customFonts,
+  };
 
-  const [theme, setTheme] = useState(initalTheme);
+  const darkTheme = {
+    ...DarkTheme,
+    fonts: customFonts,
+  };
+
+  const [theme, setTheme] = useState(darkTheme);
 
   useEffect(() => {
-    console.log('🎨', {theme: theme, darkmode: colorScheme});
-    // setTheme(initalTheme);
-  }, [isDark]);
+    const schemeIsDark = colorScheme === 'dark' ? true : false;
+    setTheme(schemeIsDark ? darkTheme : initalTheme);
+    setIsDarkMode(schemeIsDark);
+    console.log('🎨', {colorScheme, schemeIsDark});
+  }, [colorScheme]);
 
   return (
     <PaperProvider theme={theme}>

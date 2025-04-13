@@ -1,16 +1,29 @@
-import axios from 'axios';
-
 export interface Pokemon {
   id: number;
   name: string;
-  image?: string;
   types: string[];
   avatar: string;
   sprites: string[];
-  // TODO
-  // colors: string
+
+  color: string;
+
+  games: string[];
+  stats: Stat[];
+  abilities: string[];
+  moves: Move[];
 }
 
-export const pokeApi = axios.create({
-  baseURL: 'https://pokeapi.co/api/v2',
-});
+export interface Stat {
+  name: string;
+  value: number;
+}
+
+export interface Move {
+  name: string;
+  level: number;
+}
+
+export interface Move {
+  name: string;
+  level: number;
+}
